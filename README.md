@@ -23,4 +23,13 @@ This script generates samples prior to the training process (inputs are cosmolog
 
 8. NOTE: To avoid issues with interpolation, we have modified the original `velocileptors` repository (to `velocileptors_free` which is installed in the environment) to allow the freedom to pass our own k grid manually (the original code sets logarithmic spacing by default), so the line calling `EPT.REPT` uses slightly different arguments than original velocileptors.
 
-9. Currently, the emulator computes the power spectrum without the AP effect incorporated (sets apar=aperp=1 in the code), so the AP must be applied analytically in your theory code (Effort.jl has the necessary functions to do this). But if desired, the AP can be reincorporated by calculating the AP parameters and applying them to the line `PT.compute_redshift_space_power_multipoles_tables`. 
+9. Currently, the emulator computes the power spectrum without the AP effect incorporated (sets apar=aperp=1 in the code), so the AP must be applied analytically in your theory code (Effort.jl has the necessary functions to do this). But if desired, the AP can be reincorporated by calculating the AP parameters and applying them to the line `PT.compute_redshift_space_power_multipoles_tables`.
+
+
+
+#### training.jl
+This script generates performs the training itself after the data generation has finished. The existing code is again tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. Here are instructions for how to modify the script to accomodate any model:
+
+1. `nk` at the top of the script is the size of the emulator k grid, which must be adjusted depending on which k grid the user chooses to apply.
+
+2. 
