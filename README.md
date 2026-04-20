@@ -1,6 +1,42 @@
-# emulators_pipeline
+# desi-emulators-pipeline
 
-This repository contains the scripts for training neural network emulators on the NERSC supercomputer.
+This repository contains the files and scripts necessary for training neural network emulators on the NERSC supercomputer.
+
+## Installation 
+
+First, we must create an environment which permits the use of PyCall within Julia. `cd` to your preferred directory and run the following steps:
+
+1. 
+```
+module load python
+conda create -n classy_env python=3.10 -y
+conda activate classy_env
+pip install numpy scipy cython
+pip install classy
+pip install git+https://github.com/marcobonici/velocileptors_free.git
+```
+2. Run ```which python``` and copy/paste the folder path (will be needed later).
+
+3. Open a new terminal and `cd` to the folder where you started, and run the following steps. In the line `ENV["PYTHON"]`, paste the directory path that was copied from step 2.
+```
+module load julia
+julia
+using Pkg
+Pkg.activate(".")
+Pkg.add("PyCall")
+ENV["PYTHON"] = <which-python-folder-path>
+Pkg.build("PyCall")
+exit()
+```
+
+4. To install the remainder of the necessary packages, `cp` the `Project.toml` and `Manifest.toml` files to your directory, and run the following commands:
+```
+julia
+using Pkg
+Pkg.activate(".")
+Pkg.instantiate()
+exit()
+```
 
 ## Scripts
 
