@@ -2,7 +2,7 @@
 
 This repository contains the files and scripts necessary for training neural network emulators on the NERSC supercomputer.
 
-## Installation 
+## Installation
 
 First, we must create an environment which permits the use of PyCall within Julia. `cd` to your preferred directory and run the following steps:
 
@@ -38,7 +38,7 @@ Pkg.instantiate()
 exit()
 ```
 
-## Scripts
+## Scripts (run within job scripts)
 
 #### data_generation.jl
 This script generates samples prior to the training process (inputs are cosmological parameters and outputs are the statistics). The existing code is tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. Here are instructions for how to modify the script to accomodate any model:
@@ -89,3 +89,6 @@ This script performs the training itself after the data generation has finished.
 11. `lr_list` specifies the different learning rates that the minimizations successively iterate through (and there are multiple runs for each). The user is free to vary these as well as the other hyperparameters such as batchsize and the number of iterations in total. These will vary depending on the desired accuracy from the user balanced with emulator accuracy.
 
 12. The `weights.npy` files are continuously saved away to the emulator folder as the test loss continues to improve. This is what Effort.jl later reads in when initializing the emulator and calculating predictions.
+
+
+## Job Scripts (submitted directly from terminal)
