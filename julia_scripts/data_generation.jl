@@ -26,7 +26,7 @@ end
     ub = [1.6, 3.7, 1.1, 90, 0.025, 0.18, 0.5, 1, 2]
 
     # Specify the desired number of data samples (note: if w0wa extension is considered, some samples will be discarded for w0+wa>0)
-    n = 50000
+    n = 200000
 
     # Specify the random seed for reproducibility purposes (or set to nothing otherwise)
     seed = nothing
@@ -42,7 +42,7 @@ end
     s = s[:, s_cond.<0.0]
 
     # Specify the directory path to store training samples (recommended to change depending on which model/code being used)
-    root_dir = "effort_velocileptors_rept_mnuw0wacdm_" * string(n)
+    root_dir = "/pscratch/sd/j/jgmorawe/effort_velocileptors_rept_mnuw0wacdm_" * string(n)
 
     # Import necessary python modules from Julia (velocileptors_free is modified version of velocileptors to allow for passing k grid directly)
     classy = pyimport("classy")
@@ -55,14 +55,11 @@ end
     konhmax = 10
     nk = 20000
     konh = np.logspace(np.log10(konhmin), np.log10(konhmax), nk)
-    kv_target = np.concatenate(([0.0005],
-                                np.logspace(np.log10(0.001), np.log10(0.01), 7, endpoint=false), 
-                                np.logspace(np.log10(0.01), np.log10(0.03), 4, endpoint=false), 
-                                np.arange(0.029, 0.1, 0.006), 
-                                np.arange(0.103, 0.195, 0.008), 
-                                np.arange(0.2, 0.295, 0.012), 
-                                np.arange(0.3, 0.395, 0.016), 
-                                np.arange(0.4, 0.51, 0.025)))
+    kv_target = np.concatenate((np.logspace(np.log10(0.0005), np.log10(0.0235), 15),
+                                np.linspace(0.03, 0.092, 10),
+                                np.linspace(0.1, 0.19, 11),
+                                np.linspace(0.2, 0.288, 9),
+                                np.linspace(0.3, 0.5, 15)))
 
 
     # Function which takes in the training sample parameters and saves statistics to file
