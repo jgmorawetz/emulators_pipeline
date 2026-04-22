@@ -14,30 +14,54 @@ config = ArgParseSettings()
 @add_arg_table config begin
     "--component"
     help = "Specify the component to be trained. Either 11, loop or ct."
-    default = "11"
-    "--multipole", "-l"
+    arg_type = String
+    required = true
+    "--multipole"
     help = "Specify the multipole to be trained. Either 0, 2, or 4."
     arg_type = Int
-    default = 0
-    "--path_input", "-i"
+    required = true
+    "--path_input"
     help = "Specify the path to the input folder (training data)."
+    arg_type = String
     required = true
-    "--path_output", "-o"
+    "--path_output"
     help = "Specify the path to the output folder (trained emulator)."
+    arg_type = String
     required = true
+    "--nn_setup_path"
+    help = "Specify the file path to the neural network setup json file."
+    arg_type = String
+    required = true
+    "--n_epoch"
+    help = "Specify the number of epochs."
+    arg_type = Int
+    required = true
+    "--n_run"
+    help = "Specify the number of runs (per learning rate)."
+    arg_type = Int
+    required = true
+    "--batchsize"
+    help = "Specify the batchsize."
+    arg_type = Int
+    required = true
+
 end
 parsed_args = parse_args(config)
 global Componentkind = parsed_args["component"]
 ℓ = parsed_args["multipole"]
 PℓDirectory = parsed_args["path_input"]
 OutDirectory = parsed_args["path_output"]
+nn_setup_path = parsed_args["nn_setup_path"]
+n_epoch = parsed_args["n_epoch"]
+n_run = parsed_args["n_run"]
+batchsize = parsed_args["batchsize"]
 @info ℓ
 @info PℓDirectory
 @info OutDirectory
 @info Componentkind
 
 # The length of the k grid (this must be changed if a different k grid is used)
-global nk = 55
+global nk = 60
 
 # The output size depends on which component is being computed (based on EFT expansion)
 if Componentkind == "11"
@@ -125,7 +149,7 @@ EmulatorsTrainer.maximin_df!(df, in_MinMax, out_MinMax)
 
 # Initializes the neural network architecture (must created setup .json file in advance, sample version found in github)
 # and need to adjust path accordingly
-NN_dict = JSON.parsefile("nn_setup.json")
+NN_dict = JSON.parsefile(nn_setup_path)
 NN_dict["n_output_features"] = n_output_features
 NN_dict["n_input_features"] = n_input_features
 
@@ -209,7 +233,6 @@ else
 end
 
 
-
 # Initializes the losses
 mlpdloss = SimpleChains.add_loss(mlpd, SquaredLoss(Y))
 mlpdtest = SimpleChains.add_loss(mlpd, SquaredLoss(Ytest))
@@ -227,13 +250,10 @@ println("Initial Loss: ", pippo_loss)
 lr_list = [1e-4, 7e-5, 5e-5, 2e-5, 1e-5, 7e-6, 5e-6, 2e-6, 1e-6, 7e-7, 5e-7, 2e-7]
 
 # Iterates through different learning rates and does multiple runs for each, the user may wish
-# to modify the number of trials, the number of iterations, the batchsize, etc
-n_run = 10
-n_iter = 2000
-batchsize = 256
+# to modify the number of runs, the number of epochs, the batchsize, etc
 for lr in lr_list
     for i in 1:n_run
-        @time SimpleChains.train_batched!(G, p, mlpdloss, X, SimpleChains.ADAM(lr), n_iter; batchsize=batchsize)
+        @time SimpleChains.train_batched!(G, p, mlpdloss, X, SimpleChains.ADAM(lr), n_epoch; batchsize=batchsize)
         report(p)
         test = mlpdtest(Xtest, p)
         if pippo_loss > test
