@@ -2,6 +2,8 @@
 
 This repository contains the files and scripts necessary for training neural network emulators on the NERSC supercomputer. There are three folders `Effort`, `Capse`, `ACE` each containing Julia codes, job scripts, supporting files and notebooks.
 
+Important: Many of the settings listed in the current versions of the codes/job scripts are not final/optimized fully (things like the number of training samples, emulator hyperparameters, slurm job settings may need to be adjusted depending on the accuracy/time constraints for the user training the emulator). It is recommend to start out by training an emulator with fewer samples to ensure that everything works and then proceed to larger cases.
+
 ## Installation
 
 First, we must create an environment which permits the use of PyCall within Julia. `cd` to your preferred directory and run the following steps:
