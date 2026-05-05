@@ -89,7 +89,7 @@ function reshape_Pk(Pk, factor)
 end
 
 # Computes the linear growth factor
-function D_ODE(z, ωb, ωcdm, h, Mν, w0, wa)
+function D_ODE(z, h, ωb, ωcdm, Mν, w0, wa)
     cosmology = Effort.w0waCDMCosmology(
         ln10Aₛ=3.0, nₛ=0.96, h=h,
         ωb=ωb, ωc=ωcdm, mν=Mν,
@@ -98,20 +98,20 @@ function D_ODE(z, ωb, ωcdm, h, Mν, w0, wa)
 end
 
 # Function to compute rescaling factor (to remove and then reapply after emulator prediction)
-preprocess(z, As, ωb, ωcdm, h, Mν, w0, wa) = As * D_ODE(z, ωb, ωcdm, h, Mν, w0, wa)^2
+preprocess(z, As, h, ωb, ωcdm, Mν, w0, wa) = As * D_ODE(z, h, ωb, ωcdm, Mν, w0, wa)^2
 
 # Takes in cosmological parameters and power spectrum result and outputs tuple of results
 # If certain parameters are added/removed from model, they must be modified in this function!
 function get_observable_tuple(cosmo_pars, Pk)
     z = cosmo_pars["z"]
+    As = exp(cosmo_pars["ln10As"]) * 1e-10
+    h = cosmo_pars["H0"] / 100
     ωb = cosmo_pars["ombh2"]
     ωcdm = cosmo_pars["omch2"]
     Mν = cosmo_pars["Mnu"]
-    h = cosmo_pars["H0"] / 100
-    As = exp(cosmo_pars["ln10As"]) * 1e-10
     w0 = cosmo_pars["w0"]
     wa = cosmo_pars["wa"]
-    factor = preprocess(z, As, ωb, ωcdm, h, Mν, w0, wa)
+    factor = preprocess(z, As, h, ωb, ωcdm, Mν, w0, wa)
     return (cosmo_pars["z"], cosmo_pars["ln10As"], cosmo_pars["ns"], cosmo_pars["H0"],
             cosmo_pars["ombh2"], cosmo_pars["omch2"], cosmo_pars["Mnu"], cosmo_pars["w0"], cosmo_pars["wa"], 
             reshape_Pk(Pk, factor))
