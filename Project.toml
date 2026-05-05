@@ -1,6 +1,7 @@
 [deps]
 AbstractCosmologicalEmulators = "c83c1981-e5c4-4837-9eb8-c9b1572acfc6"
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+Capse = "994f66c3-d2c7-4ba6-88fb-4a10f50800ba"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DataInterpolations = "82cc6244-b520-54b8-b5a6-8a565e85f1d0"
 Effort = "ace19e24-02c2-4bce-bc41-b57e89c0fc53"

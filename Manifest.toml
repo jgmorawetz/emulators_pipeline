@@ -2,7 +2,7 @@
 
 julia_version = "1.12.1"
 manifest_format = "2.0"
-project_hash = "1ad88c3d55116976019aa18b91f36b8a435a4e39"
+project_hash = "79b7a2231b015c11667771270422ac2707f04bb6"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "f7304359109c768cf32dc5fa2d371565bb63b68a"
@@ -350,6 +350,12 @@ deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jl
 git-tree-sha1 = "d0efe2c6fdcdaa1c161d206aa8b933788397ec71"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
 version = "1.18.6+0"
+
+[[deps.Capse]]
+deps = ["AbstractCosmologicalEmulators", "Adapt", "JSON", "NPZ"]
+git-tree-sha1 = "2c8042ef9f1e5965743fa686f97c603142661256"
+uuid = "994f66c3-d2c7-4ba6-88fb-4a10f50800ba"
+version = "0.3.7"
 
 [[deps.Cassette]]
 git-tree-sha1 = "f8764df8d9d2aec2812f009a1ac39e46c33354b8"
