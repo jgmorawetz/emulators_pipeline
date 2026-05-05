@@ -118,6 +118,20 @@ This script generates samples prior to the training process (inputs are cosmolog
 4. NOTE: The `TT`, `EE`, `TE` and `PP` statistics are saved to file for each training sample. The user is welcome to change this if only certain components are needed for their purposes.
 
 
+#### training.jl
+This script performs the training itself after the data generation has finished. The existing code is again tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. The instructions are very similar to those for the Effort emulators with a few changes:
+
+1. The function `preprocess` applies a rescaling to remove degrees of freedom that are easy to incorporate analytically in a separate step and thus improve emulator accuracy. In the case of the CMB angular power spectra, the statistic is divided by $A_s e^{-2\tau}$ (since that controls the amplitude) and then remultiplied by this after the emulator prediction is made.
+
+2. The function `get_observable_tuple` is analagous to the version for Effort and takes in the cosmology parameters and the Cl result and outputs the tuple of the parameters and the Cl result rescaled by the factor. This is tailored currently to mnuw0waCDM (but with the addition of $\tau$ as a parameter), and the user needs to adjust if a different model is used. Otherwise, the same rules apply for this step as for Effort version.
+
+3. Steps 3-6 are the same as for the Effort version but with CMB settings instead.
+
+4. Step 7 is similar but this time it is only postprocessing files `postprocessing.jl` (and analagous python version). Similar to the Effort case, the rescaling requires the user to specify the indices corresponding to the ln10As and $\tau$ parameters in the input vector, e.g. currently, it is first and sixth entries. The user will again need to adjust these if they switch the order of parameters in the input vector.
+
+5. Steps 8 and 9 are the same as for the Effort version.
+
+
 ### Job scripts (submitted directly from terminal)
 
 #### data_generation.sh
