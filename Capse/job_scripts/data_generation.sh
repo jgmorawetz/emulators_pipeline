@@ -3,10 +3,10 @@
 #SBATCH -C cpu
 #SBATCH -q regular
 #SBATCH --job-name=data_gen
-#SBATCH --time=24:00:00
+#SBATCH --time=04:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --mem=300G
+#SBATCH --ntasks-per-node=40
+#SBATCH --mem=400G
 
 
 module load julia
