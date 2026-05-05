@@ -62,12 +62,12 @@ preprocess(ln10As, τ) = exp(ln10As) * 1e-10 * exp(-2 * τ)
 # Takes in cosmological parameters and Cl result and outputs tuple of results
 # If certain parameters are added/removed from model, they must be modified in this function!
 function get_observable_tuple(cosmo_pars, Cl)
+    ln10As = cosmo_pars["ln10As"]
+    ns = cosmo_pars["ns"]
+    H0 = cosmo_pars["H0"]
     ωb = cosmo_pars["ombh2"]
     ωcdm = cosmo_pars["omch2"]
     τ = cosmo_pars["τ"]
-    H0 = cosmo_pars["H0"]
-    ln10As = cosmo_pars["ln10As"]
-    ns = cosmo_pars["ns"]
     Mν = cosmo_pars["Mnu"]
     w0 = cosmo_pars["w0"]
     wa = cosmo_pars["wa"]
