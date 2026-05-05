@@ -136,3 +136,10 @@ This script performs the training itself after the data generation has finished.
 
 #### data_generation.sh
 This is the analogous script to the data_generation.sh job script from Effort. It runs the code found in `data_generation.jl` but for Capse instead. Note that the CMB statistics are more computationally demanding and require more memory and runtime to complete the data generation. But NERSC has a memory limit for a single node, so the user will need to adjust the settings to fulfill these criteria (may require using more than a single node, and it may not be possible to use all the available cores in the node due to the memory limit). Currently, the settings are sufficient for a smaller training sample size of 10000. Otherwise, follow all the same steps for the analogous Effort version (including making sure the folder path for the trained emulator does not already exist).
+
+Once ready, the user simply runs: ```sbatch Capse/job_scripts/data_generation.sh``` from the `desi-emulators-pipeline` folder.
+
+#### training.sh
+This is the analogous script to the training.sh job script from Effort. It runs the code found in `training.jl` but for Capse instead. Similar to the data generation script, more resources will have to be used since the CMB emulator takes longer to train. The current settings are just set for a smaller emulator but will need to be adjusted for larger training samples. This time, however, the array jobs are split based on component kind (`TT`, `EE`, `TE` or `PP`). As such, similar to the Effort case, the user must `mkdir` the output path in advance before running the script, and the user must `mkdir` three subfolders: `TT`, `EE`, `TE` (where the data for each component is stored) within this outer folder. And similarly, the user can adjust hyperparameters such as the number of epochs, number of runs and batchsize depending on the desired training settings.
+
+Once ready, the user simply runs: ```sbatch Capse/job_scripts/training.sh``` from the `desi-emulators-pipeline` folder.
