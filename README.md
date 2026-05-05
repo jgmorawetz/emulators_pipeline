@@ -99,3 +99,18 @@ Once ready, the user simply runs: ```sbatch Effort/job_scripts/data_generation.s
 This script is the second script the user should run. It runs the code found in `training.jl`. The slurm settings may need to be adjusted similar to the previous script. Unlike the previous script however, this version uses array jobs to submit a separate job for each multipole/component pair, and also allocates multiple cpus per task for each (parallelizes the batchsize). The user needs to adjust the latter by modifying `cpus-per-task` as desired – there is some overhead time associated with the parallelization so the boost in performance is more noticeable the longer the emulator training takes. The memory `mem-per-cpu` and allocated time `time` may also need to be adjusted depending on the emulator in question. The user needs to modify `home_dir` and `scratch_dir` to match the directory where their environment is cloned to and where the training samples are stored. They also need to modify `path_input` and `path_output` to the appropriate input folder from the data generation script and the desired output folder. IMPORTANT: The user must `mkdir` the output path in advance before running this script, and the user must `mkdir` three subfolders: `0`,`2`,`4` (where the data for each multipole is stored) within this outer folder. Then within each of the `0`,`2`,`4` subfolders, the user must further `mkdir` three subsubfolders for each: `11`,`loop`,`ct` (where the linear, loop and counterterm emulator information will be stored). Note these steps can alternatively be added to the job script if preferred. Lastly, the user can adjust the hyperparameters such as number of epochs, number of runs and batchize depending on the desired training settings.
 
 Once ready, the user simply runs: ```sbatch Effort/job_scripts/training.sh``` from the folder where the script is located.
+
+## Capse (CMB angular power spectra)
+
+### Julia codes 
+
+#### data generation.jl
+This script generates samples prior to the training process (inputs are cosmological parameters and outputs are the statistics). The existing code is tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. The instructions are very similar to those for the Effort emulators with a few changes:
+
+1. Complete the same steps 1-5 from the Effort version. The only difference is that redshift is no longer a free parameter and the optical depth tau is introduced as an additional parameter for the mnuw0waCDM model. Parameter orderings and associated boundaries change accordingly. The folder path should also be adjusted since it is for a Capse class emulator not Effort velocileptors anymore.
+
+2. Step 7 is the same as from Effort, but with the `classy_script` function replacing the role of `velocileptors_script`. The `cosmo_params` dictionary again contains the parameters needing to be specified in Class. In this case, the parameters (ln10As, ns, H0, ombh2, omch2, $\tau$, Mnu, w0, wa) are allowed to vary freely. And the user will need to modify this if a different model is used.
+
+3. NOTE: The current calculation goes up to lmax=10000 to be conservative since users may require their emulators to go up this high. If it is not required, however, the user is free to adjust the lmax (in the `cosmo_params` dictionary and in the line `cosmo.lensed_cl`) accordingly which will speed up the code.
+
+4. NOTE: The `TT`, `EE`, `TE` and `PP` statistics are saved to file for each training sample. The user is welcome to change this if only certain components are needed for their purposes.
