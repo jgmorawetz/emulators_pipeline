@@ -58,22 +58,22 @@ end
                 "output" => "tCl pCl lCl",
                 "l_max_scalars" => 10000,
                 "lensing" => "yes",
+                "ln10^{10}A_s" => CosmoDict["ln10As"],
+                "n_s" => CosmoDict["ns"],
                 "h" => CosmoDict["H0"] / 100,
                 "omega_b" => CosmoDict["ombh2"],
                 "omega_cdm" => CosmoDict["omch2"],
-                "ln10^{10}A_s" => CosmoDict["ln10As"],
-                "n_s" => CosmoDict["ns"],
                 "tau_reio" => CosmoDict["τ"],
-                "N_ur" => 2.0308,
-                "N_ncdm" => 1,
                 "m_ncdm" => CosmoDict["Mnu"],
-                "use_ppf" => "yes",
                 "w0_fld" => CosmoDict["w0"],
                 "wa_fld" => CosmoDict["wa"],
+                "N_ur" => 2.0308,
+                "N_ncdm" => 1,
+                "use_ppf" => "yes",
                 "fluid_equation_of_state" => "CLP",
-                "cs2_fld" => 1.0,
-                "Omega_Lambda" => 0.0,
-                "Omega_scf" => 0.0,
+                "cs2_fld" => 1,
+                "Omega_Lambda" => 0,
+                "Omega_scf" => 0,
                 "accurate_lensing" => 1,
                 "non_linear" => "hmcode")
             # Initializes the Class object and then computes statistics
@@ -83,10 +83,10 @@ end
             cl = cosmo.lensed_cl(lmax=10000)
             ell = np.arange(length(cl["tt"])) # multipole array goes from 0 up to l_max (inclusive)
             factor = ell .* (ell .+ 1) ./ 2 ./ np.pi
-            tt = 7.42715e12 .* (factor .* cl["tt"])[3:10000]
-            ee = 7.42715e12 .* (factor .* cl["ee"])[3:10000]
-            te = 7.42715e12 .* (factor .* cl["te"])[3:10000]
-            pp = (ell .* (ell .+ 1) .* ell .* (ell .+ 1) .* cl["pp"] ./ 2 ./ np.pi)[3:10000]
+            tt = 7.42715e12 .* (factor .* cl["tt"])[3:end]
+            ee = 7.42715e12 .* (factor .* cl["ee"])[3:end]
+            te = 7.42715e12 .* (factor .* cl["te"])[3:end]
+            pp = (ell .* (ell .+ 1) .* ell .* (ell .+ 1) .* cl["pp"] ./ 2 ./ np.pi)[3:end]
             if any(isnan, tt) || any(isnan, ee) || any(isnan, te) || any(isnan, pp)
                 @error "There are nan values!"
             else
