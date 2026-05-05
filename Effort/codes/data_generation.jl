@@ -73,22 +73,22 @@ end
                 "output" => "mPk",
                 "P_k_max_h/Mpc" => 20.0,
                 "z_pk" => "0.0,3.",
+                "ln10^{10}A_s" => CosmoDict["ln10As"],
+                "n_s" => CosmoDict["ns"],
                 "h" => CosmoDict["H0"] / 100,
                 "omega_b" => CosmoDict["ombh2"],
                 "omega_cdm" => CosmoDict["omch2"],
-                "ln10^{10}A_s" => CosmoDict["ln10As"],
-                "n_s" => CosmoDict["ns"],
+                "m_ncdm" => CosmoDict["Mnu"],
+                "w0_fld" => CosmoDict["w0"],
+                "wa_fld" => CosmoDict["wa"],
                 "tau_reio" => 0.0568,
                 "N_ur" => 2.0308,
                 "N_ncdm" => 1,
-                "m_ncdm" => CosmoDict["Mnu"],
                 "use_ppf" => "yes",
-                "w0_fld" => CosmoDict["w0"],
-                "wa_fld" => CosmoDict["wa"],
                 "fluid_equation_of_state" => "CLP",
-                "cs2_fld" => 1.0,
-                "Omega_Lambda" => 0.0,
-                "Omega_scf" => 0.0)
+                "cs2_fld" => 1,
+                "Omega_Lambda" => 0,
+                "Omega_scf" => 0)
             
             # Initializes the Class object and then computes statistics
             cosmo = classy.Class()
