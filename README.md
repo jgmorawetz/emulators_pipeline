@@ -104,7 +104,7 @@ Once ready, the user simply runs: ```sbatch Effort/job_scripts/training.sh``` fr
 
 ### Julia codes 
 
-#### data generation.jl
+#### data_generation.jl
 This script generates samples prior to the training process (inputs are cosmological parameters and outputs are the statistics). The existing code is tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. The instructions are very similar to those for the Effort emulators with a few changes:
 
 1. Complete the same steps 1-5 from the Effort version. The only difference is that redshift is no longer a free parameter and the optical depth tau is introduced as an additional parameter for the mnuw0waCDM model. Parameter orderings and associated boundaries change accordingly. The folder path should also be adjusted since it is for a Capse class emulator not Effort velocileptors anymore.
@@ -114,3 +114,9 @@ This script generates samples prior to the training process (inputs are cosmolog
 3. NOTE: The current calculation goes up to lmax=10000 to be conservative since users may require their emulators to go up this high. If it is not required, however, the user is free to adjust the lmax (in the `cosmo_params` dictionary and in the line `cosmo.lensed_cl`) accordingly which will speed up the code.
 
 4. NOTE: The `TT`, `EE`, `TE` and `PP` statistics are saved to file for each training sample. The user is welcome to change this if only certain components are needed for their purposes.
+
+
+### Job scripts (submitted directly from terminal)
+
+#### data_generation.sh
+This is the analogous script to the data_generation.sh job script from Effort. It runs the code found in `data_generation.jl` but for Capse instead. Note that the CMB statistics are more computationally demanding and require more memory and runtime to complete the data generation. But NERSC has a memory limit for a single node, so the user will need to adjust the settings to fulfill these criteria (may require using more than a single node, and it may not be possible to use all the available cores in the node due to the memory limit). Currently, the settings are sufficient for a smaller training sample size of 10000. Otherwise, follow all the same steps for the analogous Effort version (including making sure the folder path for the trained emulator does not already exist).
