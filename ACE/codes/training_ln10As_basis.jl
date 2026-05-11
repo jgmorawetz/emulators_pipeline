@@ -101,6 +101,10 @@ open(dest, "w") do file
     write(file, json_str)
 end
 
+# Adds supporting ACE.jl files (for postprocessing terms) to the trained emulator directory
+dest = joinpath(path_output, "postprocessing.jl")
+run(`cp ACE/supporting_files/postprocessing.jl $dest`)
+
 
 # Initializes the losses
 mlpdloss = SimpleChains.add_loss(mlpd, SquaredLoss(Y))
