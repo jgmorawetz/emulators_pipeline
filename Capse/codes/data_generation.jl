@@ -43,7 +43,7 @@ end
     # Specify the directory path to store training samples (recommended to change depending on which model/code being used)
     root_dir = "/pscratch/sd/j/jgmorawe/capse_class_mnuw0wacdm_" * string(n)
 
-    # Import necessary python modules from Julia (velocileptors_free is modified version of velocileptors to allow for passing k grid directly)
+    # Import necessary python modules from Julia
     classy = pyimport("classy")
     np = pyimport("numpy")
 
