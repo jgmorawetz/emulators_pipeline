@@ -143,3 +143,30 @@ Once ready, the user simply runs: ```sbatch Capse/job_scripts/data_generation.sh
 This is the analogous script to the training.sh job script from Effort. It runs the code found in `training.jl` but for Capse instead. Similar to the data generation script, more resources will have to be used since the CMB emulator takes longer to train. The current settings are just set for a smaller emulator but will need to be adjusted for larger training samples. This time, however, the array jobs are split based on component kind (`TT`, `EE`, `TE` or `PP`). As such, similar to the Effort case, the user must `mkdir` the output path in advance before running the script, and the user must `mkdir` three subfolders: `TT`, `EE`, `TE`, `PP` (where the data for each component is stored) within this outer folder. And similarly, the user can adjust hyperparameters such as the number of epochs, number of runs and batchsize depending on the desired training settings.
 
 Once ready, the user simply runs: ```sbatch Capse/job_scripts/training.sh``` from the `desi-emulators-pipeline` folder.
+
+## ACE (emulating other quantities, e.g. BAO rsdrag, growth rate/factor, etc.)
+
+### Julia codes 
+
+#### data_generation.jl
+This script generates samples prior to the training process (inputs are cosmological parameters and outputs are the relevant quantities). The existing code is tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. The instructions are very similar to those for the Effort emulators with a few changes:
+
+1. Complete the same steps 1-5 from the Effort version. The folder path should also be adjusted since it is for a ACE class emulator not Effort velocileptors anymore.
+
+2. Step 7 is the same as from Effort, but with the `classy_script` function replacing the role of `velocileptors_script`. The `cosmo_params` dictionary again contains the parameters needing to be specified in Class. In this case, the parameters (ln10As, ns, H0, ombh2, omch2, Mnu, w0, wa) are allowed to vary freely (z also varies freely but isn't part of this specific dictionary). And the user will need to modify this if a different model is used.
+
+3. NOTE: The ACE emulators are designed to compute additional relevant quantities not any specific power spectrum statistic. For each trainin sample (from the latin hypercube sampling), we save away two versions of the results vector, one where the input is in the ln10As basis and the output vector is [sigma8, sigma8_z, rs_drag, H_z, r_z, D_z, f_z], and the other where the input is in the sigma8 basis and the output vector is [ln10As, sigma8_z, rs_drag, H_z, r_z, D_z, f_z]. For this reason, sigma8 is added to the cosmological parameter dictionary for each training sample so that these two different versions of the emulator can be trained in the next step.
+
+
+#### training_ln10As_basis.jl, training_sigma8_basis.jl
+These two scripts performs the training itself after the data generation has finished (with each version of the code using a different basis either ln10As or sigma8). The existing code is again tailored to the mnuw0waCDM extension but it can be generalized to any model of interest. The instructions are very similar to those for the Effort emulators with a few changes:
+
+1. Step 1 does not exist anymore, because there is no pre/postprocessing of the statistic unlike for Effort and Capse.
+
+2. Step 2 is the same except for the preprocess step is no longer present. In the returned tuple, only the free emulator parameters should be listed and they should be listed in the same order as the emulator input.
+
+3. Steps 3-6 are the same, except for depending on whether the basis is in ln10As or sigma8, the parameters listed change between the two versions of the scripts. It is currently tailored to mnuw0waCDM and parameters must be removed/added depending on which parameters are allowed to vary by the emulator.
+
+4. Step 7 is similar but this time it is only the postprocessing file `postprocessing.jl`. However, there is no actual pre/postprocessing as mentioned before, so this file is just a placeholder (but still must be included).
+
+5. Steps 8-9 are the same as for Effort version.
