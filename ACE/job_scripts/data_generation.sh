@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --account=desi
 #SBATCH -C cpu
-#SBATCH -q debug
+#SBATCH -q regular
 #SBATCH --job-name=data_gen
-#SBATCH --time=00:30:00
+#SBATCH --time=08:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=40
-#SBATCH --mem=400G
+#SBATCH --ntasks-per-node=128
+#SBATCH --mem=256G
 
 
 module load julia
@@ -24,4 +24,4 @@ export JULIA_TOTAL_TASKS=$(
   scontrol show job "$SLURM_JOB_ID" | tr ' ' '\n' | grep -m1 '^NumTasks=' | cut -d= -f2
 )
 
-srun -N1 -n1 --mpi=none --cpu-bind=none --overlap julia --project=$JULIA_PROJECT ACE/codes/data_generation.jl
+srun -N1 -n1 --mpi=none --cpu-bind=none --overlap julia --project=$JULIA_PROJECT ACE/data_generation.jl
