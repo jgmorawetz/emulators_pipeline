@@ -170,3 +170,16 @@ These two scripts performs the training itself after the data generation has fin
 4. Step 7 is similar but this time it is only the postprocessing file `postprocessing.jl`. However, there is no actual pre/postprocessing as mentioned before, so this file is just a placeholder (but still must be included).
 
 5. Steps 8-9 are the same as for Effort version.
+
+### Job scripts (submitted directly from terminal)
+
+
+#### data_generation.sh
+This is the analogous script to the data_generation.sh job script from Effort. It runs the code found in `data_generation.jl` but for ACE instead. Follow all the same steps for the analogous Effort version (including making sure the folder path for the trained emulator does not already exist).
+
+Once ready, the user simply runs: ```sbatch ACE/job_scripts/data_generation.sh``` from the `desi-emulators-pipeline` folder.
+
+#### training.sh
+This is the analogous script to the training.sh job script from Effort. It runs the codes found in `training_ln10As_basis.jl` and `training_sigma8_basis.jl` but for ACE instead. This time, however, the array jobs are split based on the two versions of the emulator (one in ln10As basis and one in sigma8 basis). As such, similar to the Effort case, the user must `mkdir` the output path in advance before running the script. And similarly, the user can adjust hyperparameters such as the number of epochs, number of runs and batchsize depending on the desired training settings.
+
+Once ready, the user simply runs: ```sbatch ACE/job_scripts/training.sh``` from the `desi-emulators-pipeline` folder.
